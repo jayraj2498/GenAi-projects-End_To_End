@@ -1,0 +1,199 @@
+we will make app serch engine which will use LLm and  also it will intract with with tools 
+with the help of agent we will use that tolls and intrgrate with our LLm model 
+so , LMM model will provide combine response  . 
+
+
+
+============================================================================== 
+
+st.chat_message()
+st.chat_message("user").write("Hello, how are you?")
+st.chat_message("assistant").write("I am good. How can I assist you?")
+
+Output:
+
+The first line will show the message from the user in one chat bubble.
+The second line will show the message from the assistant in another bubble.
+
+================================================================================= 
+
+code explnation :
+
+ Chat Session State
+ 
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "Hi, I am a chatbot who can search the web. How can I help you?"}
+    ]
+
+What does this do?
+st.session_state
+
+This is Streamlit's memory store.
+It remembers data even if the app refreshes (e.g., user messages).
+Key point:
+
+It checks if messages exists in session_state.
+If it doesn't exist, it initializes it with a default assistant message:
+"Hi, I am a chatbot who can search the web. How can I help you?"
+Purpose:
+Keeps track of chat history throughout the conversation.
+
+
+
+
+7. Display Previous Messages
+python
+Copy code
+
+for msg in st.session_state.messages:
+    st.chat_message(msg["role"]).write(msg["content"])
+What does this do?
+Iterates through each message stored in st.session_state.messages.
+msg["role"] - Specifies whether the message is from the user or assistant.
+msg["content"] - Contains the text of the message.
+st.chat_message(msg["role"]).write(msg["content"])
+Displays the message in the chat window.
+Example:
+If chat history is:
+
+python
+Copy code
+
+[{"role": "user", "content": "What is AI?"}, 
+ {"role": "assistant", "content": "AI stands for Artificial Intelligence."}]
+The output will look like this:
+
+
+
+
+User: What is AI?  
+Assistant: AI stands for Artificial Intelligence.  
+Purpose:
+Displays past chat history in the UI so the user can see the full conversation.
+
+
+
+
+8. User Input
+
+if prompt := st.chat_input(placeholder="what is generative AI"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.chat_message("user").write(prompt)
+What does this do?
+st.chat_input()
+
+Adds a text box for the user to type input.
+Displays "what is generative AI" as placeholder text.
+prompt :=
+
+Checks if the user has typed a message.
+If yes, the message is saved in the prompt variable.
+st.session_state.messages.append()
+
+Appends the user's input to the chat history in session_state.
+Example:
+python
+Copy code
+{"role": "user", "content": "What is AI?"}
+st.chat_message("user").write(prompt)
+
+Displays the user's input immediately in the chat window.
+Purpose:
+Handles user input, updates chat history, and displays it in the UI.
+
+9. Initialize Language Model (LLM)
+python
+Copy code
+llm = ChatGroq(groq_api_key=api_key, model_name="Llama3-8b-8192", streaming=True)
+tools = [search, arxiv, wikipedia]
+What does this do?
+ChatGroq
+
+Loads the Llama3-8b-8192 model using the API key entered by the user.
+Streaming=True - Sends partial results as they are generated (real-time responses).
+tools
+
+Combines the tools:
+DuckDuckGo for web search.
+Arxiv for research papers.
+Wikipedia for encyclopedic knowledge.
+Purpose:
+Initializes the LLM (Language Model) and connects the tools to answer queries.
+
+10. Initialize Agent
+python
+Copy code
+search_agent = initialize_agent(
+    tools=tools,
+    llm=llm,
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    handle_parsing_errors=True
+)
+What does this do?
+initialize_agent()
+
+Combines the LLM and tools to form a chatbot agent.
+AgentType.ZERO_SHOT_REACT_DESCRIPTION
+
+Means the AI does not need training for specific tasks.
+It can reason and decide which tool (Wikipedia, Arxiv, or Web Search) to use based on the input.
+handle_parsing_errors=True
+
+Prevents the app from crashing if there’s a formatting error in the response.
+Purpose:
+Creates a smart chatbot that can think, choose tools, and respond based on the user's question.
+
+11. Generate Assistant Response
+python
+Copy code
+with st.chat_message("assistant"):
+    st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
+    response = search_agent.run(st.session_state.messages, callbacks=[st_cb])
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.write(response)
+Step-by-Step Explanation:
+with st.chat_message("assistant"):
+
+Sets up a loading spinner in the chat box for the assistant's response.
+st_cb = StreamlitCallbackHandler()
+
+Allows real-time updates when the chatbot is processing (shows steps/thoughts).
+search_agent.run()
+
+Sends the entire chat history to the AI agent.
+The agent decides which tool (Wikipedia, Arxiv, or Web Search) to use.
+Generates a response based on the tool's output.
+st.session_state.messages.append()
+
+Saves the assistant’s response to the chat history.
+st.write(response)
+
+Displays the assistant’s response in the chat window.
+Example:
+User: "What is generative AI?"
+Steps the assistant might take:
+
+Decide to use Wikipedia.
+Fetch an answer.
+Respond: "Generative AI creates new data based on patterns learned from existing data."
+Purpose:
+Generates a response, updates the chat history, and displays it dynamically.
+
+Final Output Example
+
+
+Assistant: Hi, I am a chatbot who can search the web. How can I help you?
+User: What is generative AI?
+Assistant: Generative AI creates new data based on patterns learned from existing data.
+In Short: What Does It Do?
+Maintains Chat History - Stores messages using session_state.
+Handles User Input - Collects user queries and displays them.
+Uses LLM & Tools - Processes input through an AI agent using Wikipedia, Arxiv, and Web Search.
+Real-Time Updates - Displays partial outputs dynamically.
+
+
+
+
+
+
