@@ -1,0 +1,66 @@
+if we have data source it can be interm of structure or unstrurcture form we will reding this data 
+& then we will summrerise the the entire information that present inside it 
+
+when we talk wrt summrerise : their are the three way inside the langchain 
+
+    A) Stuff 
+    B) Map-reduce 
+    C) Refine 
+
+# this is with limited no of text but when you huge text , PDF , then we have to use Diff -Diff types Summerization tech  are 
+
+    # A) Stuff Document chain summerization 
+    
+    # B) Map-reduce summerization teche (this is very important for larger fiile / data sorces) 
+    # here we have 2 imp type 
+        # - 1) single prompt 
+        # - 2) multiple prompt template 
+        
+    # C) Refine chain summerization 
+
+
+
+
+
+A) Stuff :
+Stuff Document chain summerization  this is most basic type of summerization that 
+
+ex : if we haev pdf -> if we pdf 10 diff Document inside sdc -> this doc are all get combine and then it is send to particaular prompt template  
+
+challenges :  if the doc is large size(10 k doc) so ,
+when it become very big it will not possible to send it directly to LLM  model becz it haev limitation with context size
+
+
+so , to overcome this problem we use -->  Map-reduce  
+
+
+B) Map-reduce : inside it if i have a documnets insted of  combine all and giveing  it to prompt template 
+first of all we will divide it to the smaller chunk 
+
+along with smaller chunk we pass it to a prompt template and we pass to LLM model then we get summery for each doc 
+after this at end we combine all summaries and fillanly we combie it and get our final summery  
+
+
+Document -> smaller chunk -> prompt -> LLm -> summary --------> final summary (entire doc summeries) &
+ " finally whatever summery we get we combine it with another prompt template and get the Final summary "
+
+
+
+
+
+C) Refine :
+
+It is a just slight modification when compair to map reduce 
+
+we do the below processe for every document : 
+documnets-> spitted_doc(chunk) -> prompt -> LLM -> summerization  -----(for 1st doc) 
+
+for 2nd doc :
+inside the refine what happend , so before sending the 2nd doc to prompt && LLM  "we are going to take the refrance of 1st doc summerization " 
+-conclusion :
+
+(summerization of 1st doc)--> documnets-> spitted_doc(chunk) -> prompt -> LLM -> summerization  
+
+same for 3,4 ,5.... nth documetn this proceess continue  
+
+finnally after covering all the documents we get final summary 
