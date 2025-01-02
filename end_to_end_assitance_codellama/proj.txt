@@ -1,0 +1,5 @@
+code llama is state of art LLM capable generating code and natural language 
+
+it is opensource 
+
+it is code speaciallized verdion f llama2 
