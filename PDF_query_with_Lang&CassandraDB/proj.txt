@@ -1,0 +1,15 @@
+CassandraDb is creating in the platform called as datastaxx 
+
+datastaxx is help to create cassandraDB on cloud itself and using of thatu will able to perform vectorserch 
+
+whenever you have doc , want to perform Q&A operation vectoreseach you need to use 
+
+* if we have huge pdf document then the vectore size is keep on incresing so we have to store this embding 
+into some kind of database so we are using CassandraDB 
+
+CassandraDB : is is manage masive amount of data this is nosql database , so we save embedding data here 
+
+
+Q . how we use it , how we are creating this spcific kind of DB ?
+--> for tht we are using datastax platform it help to crete vector cassandraDB so , you store vectore entire vectore inthis vectorDB 
+& any time if user question any thing from DB he will get response  
